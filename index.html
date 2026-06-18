@@ -307,12 +307,8 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // ======================================================
-  // 🌟 기능: CTA 버튼 클릭 시 부드러운 스크롤 구현
-  // ======================================================
-
+  // 1. CTA 버튼 부드러운 스크롤 (기존 로직 유지)
   const ctaButtons = document.querySelectorAll('.hero-btns a, .cta .btn-primary');
-
   ctaButtons.forEach(button => {
     button.addEventListener('click', (e) => {
       if (e.currentTarget.getAttribute('href') === '#demo') {
@@ -322,19 +318,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-
-  // ======================================================
-  // 핵심 기능 로직 유지 및 개선
-  // ======================================================
-
+  // 2. 핵심 변수 및 DOM 선택
   const styleButtons = document.querySelectorAll('.style-button');
   const inputText = document.getElementById('inputSourceText');
   const outputText = document.getElementById('outputTargetText');
   const tryBtn = document.querySelector('.try-btn');
   
-  let currentStyle = 'blog';
+  let currentStyle = 'blog'; // 기본값 설정
 
-  // 1. 문체 버튼 클릭 로직
+  // 3. 문체 버튼 클릭 로직
   styleButtons.forEach(button => {
     button.addEventListener('click', (e) => {
       styleButtons.forEach(btn => btn.classList.remove('active'));
@@ -344,43 +336,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-// 2. 변환하기 버튼 클릭 로직 (실제 서버 통신)
+  // 4. 변환하기 버튼 클릭 로직 (단 한 번만 실행되도록 통합)
   tryBtn.addEventListener('click', async () => {
     const userText = inputText.value.trim();
-    const currentStyle = styleSelect.value;
     
     if (!userText) {
         alert("내용을 입력해주세요.");
         return;
     }
 
-    // 로딩 표시 (기존 UI 유지)
-    tryBtn.innerText = "변환 중...";
-    tryBtn.disabled = true;
-    outputText.innerText = "AI가 변환 중입니다...";
-
-    try {
-        // [중요] 주소는 본인의 Render 서버 주소로 반드시 수정하세요
-        const response = await fetch('https://humanly-landing.onrender.com/api/humanize', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: userText, style: currentStyle })
-        });
-        
-        const data = await response.json();
-        
-        // 결과 출력
-        outputText.innerText = data.result;
-    } catch (error) {
-        outputText.innerText = "서버 연결 실패. 다시 시도해주세요.";
-        console.error(error);
-    } finally {
-        tryBtn.innerText = "변환하기";
-        tryBtn.disabled = false;
-    }
-});
-
-    // 로딩 상태 표시 (UI 유지)
+    // 로딩 상태 표시
     const originalBtnText = tryBtn.innerText;
     tryBtn.innerText = "변환 중...";
     tryBtn.disabled = true;
@@ -388,20 +353,22 @@ document.addEventListener('DOMContentLoaded', () => {
     outputText.innerText = "AI가 문맥을 파악하고 사람처럼 자연스럽게 글을 다듬고 있습니다. 잠시만 기다려주세요...";
 
     try {
-      // 서버로 실제 요청 보내기
+      // 서버로 요청
       const response = await fetch('https://humanly-landing.onrender.com/api/humanize', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           text: userText, 
-          style: currentStyle // 기존 코드의 변수 유지
+          style: currentStyle 
         })
       });
 
       if (!response.ok) throw new Error("서버 응답 실패");
 
       const data = await response.json();
-      outputText.innerText = data.result; // 서버에서 받은 결과 출력
+      
+      // 결과 출력
+      outputText.innerText = data.result;
       
     } catch (error) {
       outputText.innerText = "서버 연결에 실패했습니다. 다시 시도해주세요.";
@@ -412,6 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tryBtn.disabled = false;
     }
   });
+});
 </script>
 
 </body>
