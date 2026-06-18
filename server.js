@@ -29,4 +29,9 @@ app.post('/api/humanize', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`서버 실행 중: ${PORT}`));
+// ... 기존 코드 위쪽은 그대로 유지 ...
+
+// 서버 실행 설정 (수정된 부분)
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 서버 실행 중: http://0.0.0.0:${PORT}`);
+});
