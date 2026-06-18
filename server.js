@@ -24,7 +24,9 @@ app.post('/api/humanize', async (req, res) => {
     });
     res.json({ result: chatCompletion.choices[0].message.content });
   } catch (error) {
-    res.status(500).json({ error: "처리 중 오류 발생" });
+    // 💡 에러 내용을 로그에 찍어서 확인하게 만듭니다.
+    console.error("❌ Groq API 에러 상세:", error.message); 
+    res.status(500).json({ error: "처리 중 오류 발생", details: error.message });
   }
 });
 
